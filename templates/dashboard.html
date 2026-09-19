@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>AI Student Study Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(
+                135deg,
+                #e3f2fd,
+                #e8f5e9
+            );
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #125a96;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 35px;
+        }
+
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 14px 25px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #125ca1;
+        }
+
+        .agents {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .agent {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .agent h2 {
+            color: #1769aa;
+        }
+
+        .day {
+            background: #f5f9ff;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        .task {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 4px solid #1976d2;
+            border-radius: 5px;
+        }
+
+        .topic {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1769aa;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 20px;
+        }
+
+        .question {
+            background: #f5f9ff;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        @media(max-width: 800px) {
+
+            .agents {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>🎓 AI Student Study Planner</h1>
+
+    <p class="subtitle">
+        Three AI Agents Working Together
+    </p>
+
+
+    <!-- INPUT FORM -->
+
+    <div class="form-box">
+
+        <h2>🚀 Start Your Study Session</h2>
+
+        <form method="POST">
+
+            <label>
+                Subjects
+            </label>
+
+            <input
+                type="text"
+                name="subjects"
+                placeholder="DBMS, AI, Python"
+                required
+            >
+
+
+            <label>
+                Study Hours Per Day
+            </label>
+
+            <input
+                type="number"
+                name="hours"
+                min="1"
+                max="12"
+                placeholder="3"
+                required
+            >
+
+
+            <label>
+                Number of Days
+            </label>
+
+            <input
+                type="number"
+                name="days"
+                min="1"
+                max="30"
+                placeholder="7"
+                required
+            >
+
+
+            <label>
+                Your Notes
+            </label>
+
+            <textarea
+                name="notes"
+                placeholder="Paste your study notes here..."
+                required
+            ></textarea>
+
+
+            <button type="submit">
+                🤖 Run All AI Agents
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if result %}
+
+    <div class="agents">
+
+
+        <!-- ========================= -->
+        <!-- AGENT 1 -->
+        <!-- ========================= -->
+
+        <div class="agent">
+
+            <h2>📅 Planner Agent</h2>
+
+            <p>
+                Creates your personalized study schedule.
+            </p>
+
+            {% if result.planner.plan %}
+
+                {% for day in result.planner.plan %}
+
+                    <div class="day">
+
+                        <b>
+                            Day {{ day.day }}
+                        </b>
+
+                        {% for task in day.tasks %}
+
+                            <div class="task">
+
+                                {{ task.time }}
+
+                                <br>
+
+                                📚 <b>
+                                {{ task.subject }}
+                                </b>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- AGENT 2 -->
+        <!-- ========================= -->
+
+        <div class="agent">
+
+            <h2>📚 Notes Agent</h2>
+
+            <p>
+                Analyzes your notes and finds important topics.
+            </p>
+
+
+            <h3>📌 Summary</h3>
+
+            {% for sentence in result.notes.summary %}
+
+                <p>
+                    • {{ sentence }}
+                </p>
+
+            {% endfor %}
+
+
+            <h3>⭐ Important Topics</h3>
+
+            {% for topic in result.notes.topics %}
+
+                <span class="topic">
+                    {{ topic }}
+                </span>
+
+            {% endfor %}
+
+
+            <h3>💡 Recommendation</h3>
+
+            <p>
+                {{ result.notes.recommendation }}
+            </p>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- AGENT 3 -->
+        <!-- ========================= -->
+
+        <div class="agent">
+
+            <h2>📝 Quiz Agent</h2>
+
+            <p>
+                Tests your knowledge.
+            </p>
+
+
+            {% for question in result.quiz %}
+
+                <div class="question">
+
+                    <b>
+                        {{ loop.index }}.
+                        {{ question.question }}
+                    </b>
+
+                    <ol>
+
+                        {% for option in question.options %}
+
+                            <li>
+                                {{ option }}
+                            </li>
+
+                        {% endfor %}
+
+                    </ol>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>Flask

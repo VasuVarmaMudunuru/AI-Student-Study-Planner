@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Student Study Planner</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f9ff;
+            color: #102a43;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+            height: 80px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1769aa;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #222;
+            font-size: 17px;
+        }
+
+        .nav-links a:hover {
+            color: #1769aa;
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 520px;
+            padding: 80px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(
+                120deg,
+                #e7f5ff,
+                #e9fff7
+            );
+        }
+
+        .hero-left {
+            width: 55%;
+        }
+
+        .small-title {
+            font-size: 18px;
+            letter-spacing: 3px;
+            font-weight: bold;
+            color: #526b84;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            color: #102f4f;
+        }
+
+        .hero p {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #526b84;
+            margin-bottom: 30px;
+        }
+
+        .main-button {
+            background: #1769aa;
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .main-button:hover {
+            background: #0d548c;
+        }
+
+
+        /* =========================
+           AGENT CARD
+        ========================= */
+
+        .agent-card {
+            width: 390px;
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.10);
+        }
+
+        .robot {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .agent-card h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .agent-card p {
+            color: #607d96;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .agent {
+            background: #edf6ff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-size: 17px;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            padding: 70px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #607d96;
+            font-size: 18px;
+            margin-bottom: 45px;
+        }
+
+
+        /* =========================
+           AGENT CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .card-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #607d96;
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #cbd8e5;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #1769aa;
+        }
+
+        .form-button {
+            width: 100%;
+            background: #1769aa;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 9px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-button:hover {
+            background: #0d548c;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result-section {
+            padding: 60px 8%;
+            background: #eef7ff;
+        }
+
+        .result-box {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .result-box h2 {
+            color: #1769aa;
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
+        .result-box h3 {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .result-box li {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           TOPICS
+        ========================= */
+
+        .topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topics span {
+            background: #e5f2ff;
+            color: #1769aa;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           QUIZ
+        ========================= */
+
+        .quiz-question {
+            margin-top: 25px;
+            padding: 22px;
+            background: #f4f9ff;
+            border-radius: 12px;
+            border-left: 5px solid #1769aa;
+        }
+
+        .quiz-question h3 {
+            color: #1769aa;
+        }
+
+        .quiz-question p {
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        details {
+            margin-top: 15px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #1769aa;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 12px;
+            background: #e8f4ff;
+            border-radius: 8px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #102f4f;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .hero-left {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 45px;
+            }
+
+            .agent-card {
+                width: 100%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVIGATION
+===================================== -->
+
+<nav>
+
+    <div class="logo">
+        🎓 AI Study Planner
+    </div>
+
+    <div class="nav-links">
+
+        <a href="#home">Dashboard</a>
+
+        <a href="#planner">Study Planner</a>
+
+        <a href="#notes">Notes</a>
+
+        <a href="#quiz">Quiz</a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================
+     HERO SECTION
+===================================== -->
+
+<section class="hero" id="home">
+
+    <div class="hero-left">
+
+        <div class="small-title">
+            YOUR PERSONAL AI STUDY ASSISTANT
+        </div>
+
+        <h1>
+            Study Smarter.<br>
+            Achieve More.
+        </h1>
+
+        <p>
+            Let our AI agents create your study plan,
+            analyze your notes and test your knowledge.
+        </p>
+
+        <button
+            class="main-button"
+            onclick="openPlanner()">
+
+            🚀 Start Planning
+
+        </button>
+
+    </div>
+
+
+    <div class="agent-card">
+
+        <div class="robot">
+            🤖
+        </div>
+
+        <h2>
+            3 AI Agents
+        </h2>
+
+        <p>
+            Working together to help you learn better.
+        </p>
+
+        <div class="agent">
+            📅 Study Planner Agent
+        </div>
+
+        <div class="agent">
+            📚 Notes Analyzer Agent
+        </div>
+
+        <div class="agent">
+            📝 Quiz Agent
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     AGENTS SECTION
+===================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        Meet Your AI Agents
+    </h2>
+
+    <p class="section-subtitle">
+        Three specialized agents designed to support your studies.
+    </p>
+
+
+    <div class="cards">
+
+
+        <!-- AGENT 1 -->
+
+        <div class="card" id="planner">
+
+            <div class="card-icon">
+                📅
+            </div>
+
+            <h3>
+                Study Planner Agent
+            </h3>
+
+            <p>
+                Create a personalized study schedule
+                based on your subjects and available
+                study time.
+            </p>
+
+            <button
+                class="form-button"
+                onclick="openPlanner()">
+
+                🚀 Create Study Plan
+
+            </button>
+
+        </div>
+
+
+
+        <!-- AGENT 2 -->
+
+        <div class="card" id="notes">
+
+            <div class="card-icon">
+                📚
+            </div>
+
+            <h3>
+                Notes Analyzer Agent
+            </h3>
+
+            <p>
+                Paste your study notes and the agent
+                will identify important topics and
+                create a quick summary.
+            </p>
+
+
+            <form
+                action="/analyze-notes"
+                method="POST">
+
+                <textarea
+                    name="notes"
+                    placeholder="Paste your notes here..."
+                    required></textarea>
+
+                <button
+                    type="submit"
+                    class="form-button">
+
+                    🤖 Analyze Notes
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- AGENT 3 -->
+
+        <div class="card" id="quiz">
+
+            <div class="card-icon">
+                📝
+            </div>
+
+            <h3>
+                Quiz Agent
+            </h3>
+
+            <p>
+                Enter your study notes and generate
+                practice questions automatically.
+            </p>
+
+
+            <form
+                action="/generate-quiz"
+                method="POST">
+
+                <textarea
+                    name="quiz_notes"
+                    placeholder="Paste your notes here to generate a quiz..."
+                    required></textarea>
+
+                <button
+                    type="submit"
+                    class="form-button">
+
+                    📝 Generate Quiz
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     ERROR MESSAGE
+===================================== -->
+
+{% if error %}
+
+<section class="result-section">
+
+    <div class="result-box">
+
+        <h2>
+            ⚠️ {{ error }}
+        </h2>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =====================================
+     NOTES ANALYZER RESULT
+===================================== -->
+
+{% if notes_result %}
+
+<section class="result-section">
+
+    <div class="result-box">
+
+        <h2>
+            🤖 Notes Analyzer Agent Result
+        </h2>
+
+
+        <h3>
+            📌 Summary
+        </h3>
+
+        <ul>
+
+            {% for sentence in notes_result.summary %}
+
+            <li>
+                {{ sentence }}
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+
+        <h3>
+            ⭐ Important Topics
+        </h3>
+
+        <div class="topics">
+
+            {% for topic in notes_result.important_topics %}
+
+            <span>
+                {{ topic }}
+            </span>
+
+            {% endfor %}
+
+        </div>
+
+
+        <h3>
+            📚 Recommendation
+        </h3>
+
+        <p>
+            Focus on the important topics above first,
+            then revise the remaining concepts.
+        </p>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =====================================
+     QUIZ RESULT
+===================================== -->
+
+{% if quiz_questions %}
+
+<section class="result-section">
+
+    <div class="result-box">
+
+        <h2>
+            🤖 AI Quiz Agent Result
+        </h2>
+
+        <p>
+            Your AI Quiz Agent generated the following
+            practice questions from your study notes.
+        </p>
+
+
+        {% for question in quiz_questions %}
+
+        <div class="quiz-question">
+
+            <h3>
+                Question {{ loop.index }}
+            </h3>
+
+
+            <p>
+                <strong>
+                    {{ question.question }}
+                </strong>
+            </p>
+
+
+            <div class="quiz-options">
+
+                {% for option in question.options %}
+
+                <div class="quiz-option">
+
+                    ○ {{ option }}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <details>
+
+                <summary>
+                    👁️ Show Answer
+                </summary>
+
+                <p class="answer">
+
+                    ✅ Correct Answer:
+                    <strong>
+                        {{ question.answer }}
+                    </strong>
+
+                </p>
+
+            </details>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+<!-- =====================================
+     HOW IT WORKS
+===================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        How It Works
+    </h2>
+
+    <p class="section-subtitle">
+        Your three AI agents work together to improve your learning.
+    </p>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-icon">
+                1️⃣
+            </div>
+
+            <h3>
+                Enter Your Information
+            </h3>
+
+            <p>
+                Provide your subjects, available
+                study time or study notes.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                2️⃣
+            </div>
+
+            <h3>
+                AI Agents Process It
+            </h3>
+
+            <p>
+                Specialized AI agents analyze
+                your information and generate
+                useful study material.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                3️⃣
+            </div>
+
+            <h3>
+                Study & Practice
+            </h3>
+
+            <p>
+                Follow your study plan,
+                revise your notes and
+                practice with quizzes.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
+<footer>
+
+    <p>
+        🎓 AI Student Study Planner
+    </p>
+
+    <p style="margin-top: 8px;">
+        Multi-Agent AI Web Application
+    </p>
+
+</footer>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<<script>
+
+function openPlanner() {
+
+    window.location.href = "/planner";
+
+}
+
+</script>
+
+
+    const hours = prompt(
+        "How many hours can you study per day?\n\nExample: 4"
+    );
+
+
+    if (!hours || hours.trim() === "") {
+
+        return;
+
+    }
+
+
+    const examDate = prompt(
+        "Enter your exam date:\n\nExample: 25-08-2026"
+    );
+
+
+    if (!examDate || examDate.trim() === "") {
+
+        return;
+
+    }
+
+
+    const subjectList = subjects.split(",");
+
+
+    const hoursPerSubject = (
+        parseFloat(hours) / subjectList.length
+    ).toFixed(1);
+
+
+    let plan = "";
+
+    plan += "📚 YOUR AI STUDY PLAN\n\n";
+
+    plan += "📅 Exam Date: ";
+    plan += examDate;
+    plan += "\n\n";
+
+    plan += "⏰ Study Time: ";
+    plan += hours;
+    plan += " hours/day\n\n";
+
+    plan += "━━━━━━━━━━━━━━━━━━━━\n\n";
+
+    plan += "📖 DAILY SCHEDULE\n\n";
+
+
+    subjectList.forEach(function(subject, index) {
+
+        subject = subject.trim();
+
+
+        if (subject !== "") {
+
+            plan += "🕐 Session ";
+            plan += (index + 1);
+            plan += ": ";
+            plan += subject;
+            plan += " — ";
+            plan += hoursPerSubject;
+            plan += " hours\n\n";
+
+        }
+
+    });
+
+
+    plan += "🔄 Final 30 minutes: Revision\n\n";
+
+    plan += "☕ Take a 10-minute break between sessions.\n\n";
+
+    plan += "🤖 Study Planner Agent created this plan!";
+
+
+    alert(plan);
+
+}
+
+</script>
+
+
+</body>
+
+</html>
